@@ -1,0 +1,578 @@
+
+<h2 class="sr-only">Dashboard de campaña KAIKA × ZEISS MEDITEC — métricas de leads, inversión y conversión de los últimos 30 días.</h2>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif}
+:root{
+  --n: #0B2C6B;--n2:#1A3F8F;--b:#1E56C8;--r:#E8182A;--g:#0E7C5A;
+  --gold:#F5A623;--w:#fff;--off:#F4F7FB;--lg:#E8EDF5;--mg:#8A99B5;--dk:#0D1B3E;
+}
+.wrap{background:var(--dk);min-height:100vh;padding:0 0 40px}
+.topbar{background:var(--n);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--r)}
+.logo{font-size:13px;font-weight:600;color:#fff;letter-spacing:2px}
+.logo span{color:var(--r)}
+.badge{background:var(--r);color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:4px;letter-spacing:1px}
+.filters{background:var(--n);padding:12px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.08)}
+.filter-label{font-size:11px;color:var(--mg);font-weight:500;letter-spacing:1px;margin-right:4px}
+select{background:#1a3a7a;color:#fff;border:1px solid rgba(255,255,255,.15);padding:6px 28px 6px 10px;border-radius:6px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238A99B5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+select:focus{outline:none;border-color:var(--b)}
+.pill{background:rgba(30,86,200,.2);color:#7fa8f0;border:1px solid rgba(30,86,200,.3);padding:5px 14px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s}
+.pill.active,.pill:hover{background:var(--b);color:#fff}
+.content{padding:20px 24px}
+.section-title{font-size:10px;color:var(--mg);letter-spacing:2px;font-weight:600;margin-bottom:12px;padding-left:2px}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
+.kpi{background:var(--n);border-radius:10px;padding:16px;border:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.blue::before{background:var(--b)}
+.kpi.red::before{background:var(--r)}
+.kpi.green::before{background:var(--g)}
+.kpi.gold::before{background:var(--gold)}
+.kpi.teal::before{background:#0CC0CC}
+.kpi-label{font-size:10px;color:var(--mg);letter-spacing:1px;font-weight:500;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:600;color:#fff;font-family:'DM Mono',monospace;line-height:1}
+.kpi-sub{font-size:11px;color:var(--mg);margin-top:6px}
+.kpi-delta{font-size:11px;font-weight:500;margin-top:4px}
+.delta-up{color:#4ade80}.delta-dn{color:#f87171}
+.charts-row{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px}
+.charts-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.charts-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.card{background:var(--n);border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,.06)}
+.card-title{font-size:12px;font-weight:600;color:var(--mg);letter-spacing:1px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.card-title span{color:#fff;font-size:13px;letter-spacing:0;font-weight:500}
+.chart-wrap{position:relative;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mg)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.funnel-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.funnel-bar-wrap{flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:32px;overflow:hidden;position:relative}
+.funnel-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;color:#fff;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.funnel-label{font-size:11px;color:var(--mg);width:130px;text-align:right}
+.funnel-num{font-size:12px;font-weight:600;color:#fff;width:36px;text-align:right;font-family:'DM Mono',monospace}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 12px;font-size:10px;color:var(--mg);letter-spacing:1px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.08)}
+td{padding:9px 12px;color:#c8d4e8;border-bottom:1px solid rgba(255,255,255,.04)}
+tr:hover td{background:rgba(255,255,255,.03)}
+.tag{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.5px}
+.tag-mql{background:rgba(30,86,200,.25);color:#7fa8f0}
+.tag-sql{background:rgba(14,124,90,.25);color:#4ade9a}
+.tag-new{background:rgba(138,153,181,.15);color:var(--mg)}
+.tag-won{background:rgba(232,24,42,.25);color:#f87171}
+.tag-cita{background:rgba(245,166,35,.2);color:#fbbf24}
+.sep{height:1px;background:rgba(255,255,255,.06);margin:24px 0}
+.roi-box{background:linear-gradient(135deg,rgba(14,124,90,.15),rgba(30,86,200,.1));border:1px solid rgba(14,124,90,.3);border-radius:12px;padding:20px;display:flex;align-items:center;justify-content:space-between}
+.roi-num{font-size:42px;font-weight:700;color:#4ade80;font-family:'DM Mono',monospace}
+.roi-text{font-size:13px;color:var(--mg);margin-top:4px}
+.roi-detail{text-align:right}
+.roi-detail p{font-size:12px;color:var(--mg);margin-bottom:4px}
+.roi-detail strong{color:#fff;font-family:'DM Mono',monospace}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">KAIKA <span>×</span> ZEISS MEDITEC &nbsp;|&nbsp; CAMPAIGN DASHBOARD</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:11px;color:var(--mg)">ZEISS CIRRUS 6000 · Colombia 2026</div>
+      <div class="badge">EN VIVO</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <span class="filter-label">FILTRAR:</span>
+    <select id="f-canal" onchange="applyFilters()">
+      <option value="all">Todos los canales</option>
+      <option value="google">Google Ads</option>
+      <option value="meta">Meta Ads</option>
+      <option value="ooh">OOH</option>
+    </select>
+    <select id="f-etapa" onchange="applyFilters()">
+      <option value="all">Todas las etapas</option>
+      <option value="mql">MQL</option>
+      <option value="sql">SQL</option>
+      <option value="demo">Demo Realizada</option>
+      <option value="cierre">Cierre Ganado</option>
+    </select>
+    <select id="f-ciudad" onchange="applyFilters()">
+      <option value="all">Todas las ciudades</option>
+      <option value="bogota">Bogotá</option>
+      <option value="medellin">Medellín</option>
+      <option value="cali">Cali</option>
+    </select>
+    <select id="f-semana" onchange="applyFilters()">
+      <option value="all">30 días completos</option>
+      <option value="1">Semana 1</option>
+      <option value="2">Semana 2</option>
+      <option value="3">Semana 3</option>
+      <option value="4">Semana 4</option>
+    </select>
+    <div class="pill active" onclick="resetFilters(this)">Limpiar filtros</div>
+  </div>
+
+  <div class="content">
+    <div class="section-title">RESUMEN EJECUTIVO</div>
+    <div class="kpi-grid">
+      <div class="kpi blue">
+        <div class="kpi-label">LEADS TOTALES</div>
+        <div class="kpi-val" id="k-leads">200</div>
+        <div class="kpi-sub">objetivo: 150+</div>
+        <div class="kpi-delta delta-up" id="k-leads-d">+33% vs objetivo</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">MQLs CALIFICADOS</div>
+        <div class="kpi-val" id="k-mql">58</div>
+        <div class="kpi-sub">29% del total</div>
+        <div class="kpi-delta delta-up" id="k-mql-d">+16 vs objetivo</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">CPL PROMEDIO</div>
+        <div class="kpi-val" id="k-cpl">$75K</div>
+        <div class="kpi-sub">objetivo: &lt;$100K COP</div>
+        <div class="kpi-delta delta-up">25% bajo objetivo</div>
+      </div>
+      <div class="kpi gold">
+        <div class="kpi-label">CIERRES GANADOS</div>
+        <div class="kpi-val" id="k-won">2</div>
+        <div class="kpi-sub">$415M COP en ventas</div>
+        <div class="kpi-delta delta-up">ROI +1.267%</div>
+      </div>
+      <div class="kpi teal">
+        <div class="kpi-label">INVERSIÓN TOTAL</div>
+        <div class="kpi-val">$15M</div>
+        <div class="kpi-sub">COP — 30 días</div>
+        <div class="kpi-delta delta-up">100% ejecutado</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-title">LEADS POR DÍA — TODOS LOS CANALES <span id="leads-total-label">200 leads</span></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Google Ads</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#E8182A"></div>Meta Ads</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#0E7C5A"></div>OOH / QR</div>
+        </div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chart-daily" role="img" aria-label="Leads diarios por canal durante 30 días de campaña">Leads diarios Google Ads, Meta Ads y OOH durante 30 días.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">INVERSIÓN POR CANAL <span>$15.000.000 COP</span></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:#1E56C8"></div>Google Ads 47%</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#E8182A"></div>Meta Ads 20%</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#0E7C5A"></div>OOH 23%</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#F5A623"></div>Tech Stack 10%</div>
+        </div>
+        <div class="chart-wrap" style="height:200px"><canvas id="chart-donut" role="img" aria-label="Distribución del presupuesto por canal">Inversión: Google 47%, OOH 23%, Meta 20%, Tech 10%.</canvas></div>
+      </div>
+    </div>
+
+    <div class="charts-row3">
+      <div class="card">
+        <div class="card-title">CPL POR CANAL <span>COP promedio</span></div>
+        <div class="chart-wrap" style="height:190px"><canvas id="chart-cpl" role="img" aria-label="Costo por lead por canal">CPL: Google $87K, Meta $62K, OOH $145K, Referidos $0.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">CTR POR SEMANA <span>%</span></div>
+        <div class="chart-wrap" style="height:190px"><canvas id="chart-ctr" role="img" aria-label="CTR semanal Google y Meta">CTR semanal de Google Ads y Meta Ads durante 4 semanas.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">LEADS POR CIUDAD <span id="city-label">top 5</span></div>
+        <div class="chart-wrap" style="height:190px"><canvas id="chart-city" role="img" aria-label="Leads por ciudad colombiana">Bogotá lidera con 76 leads, seguido de Medellín y Cali.</canvas></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="section-title">FUNNEL DE CONVERSIÓN</div>
+
+    <div class="charts-row2">
+      <div class="card">
+        <div class="card-title">FUNNEL MARKETING → VENTAS <span>etapa por etapa</span></div>
+        <div id="funnel-container" style="padding-top:4px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">ESPECIALIDAD DE LEADS <span>distribución</span></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Retina</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#0E7C5A"></div>Glaucoma</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#F5A623"></div>Córnea</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#E8182A"></div>General</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#8A99B5"></div>Dirección</div>
+        </div>
+        <div class="chart-wrap" style="height:210px"><canvas id="chart-espec" role="img" aria-label="Leads por especialidad médica">Distribución de leads por especialidad oftalmológica.</canvas></div>
+      </div>
+    </div>
+
+    <div class="charts-row2">
+      <div class="card">
+        <div class="card-title">SCORE DE LEADS — DISTRIBUCIÓN <span>0 a 100 pts</span></div>
+        <div class="chart-wrap" style="height:200px"><canvas id="chart-score" role="img" aria-label="Histograma de score de leads">Distribución de leads por rango de score de calificación.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">CONVERSIÓN POR CANAL <span>% leads → MQL</span></div>
+        <div class="chart-wrap" style="height:200px"><canvas id="chart-conv" role="img" aria-label="Tasa de conversión a MQL por canal">Tasas de conversión de lead a MQL por canal de adquisición.</canvas></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="section-title">ÚLTIMOS LEADS REGISTRADOS</div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>NOMBRE</th><th>ESPECIALIDAD</th><th>CLÍNICA</th>
+              <th>CIUDAD</th><th>CANAL</th><th>SCORE</th><th>ETAPA</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="section-title">RENTABILIDAD Y ROI</div>
+
+    <div class="roi-box">
+      <div>
+        <div style="font-size:11px;color:var(--mg);letter-spacing:1px;margin-bottom:6px">ROI DE CAMPAÑA</div>
+        <div class="roi-num">+1.267%</div>
+        <div class="roi-text">Con 2 cierres ganados sobre $15M invertidos</div>
+      </div>
+      <div style="display:flex;gap:32px;align-items:center">
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--mg);margin-bottom:4px">VENTAS GENERADAS</div>
+          <div style="font-size:24px;font-weight:700;color:#fff;font-family:'DM Mono',monospace">$415M</div>
+          <div style="font-size:11px;color:var(--mg)">COP</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--mg);margin-bottom:4px">COSTO POR VENTA</div>
+          <div style="font-size:24px;font-weight:700;color:#fff;font-family:'DM Mono',monospace">$7.5M</div>
+          <div style="font-size:11px;color:var(--mg)">COP</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--mg);margin-bottom:4px">COSTO POR MQL</div>
+          <div style="font-size:24px;font-weight:700;color:#fff;font-family:'DM Mono',monospace">$259K</div>
+          <div style="font-size:11px;color:var(--mg)">COP</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--mg);margin-bottom:4px">CPL PROMEDIO</div>
+          <div style="font-size:24px;font-weight:700;color:#fff;font-family:'DM Mono',monospace">$75K</div>
+          <div style="font-size:11px;color:var(--mg)">COP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const seed = (s) => { let x = Math.sin(s+1)*10000; return x-Math.floor(x); };
+function seededRand(s,min,max){ return Math.floor(seed(s)*(max-min+1))+min; }
+
+const days = Array.from({length:30},(_,i)=>`D${i+1}`);
+const googleLeads = days.map((_,i)=>seededRand(i*3,2,7));
+const metaLeads   = days.map((_,i)=>seededRand(i*3+1,1,5));
+const oohLeads    = days.map((_,i)=>seededRand(i*3+2,0,2));
+
+const leads = [];
+const specs=["Oft. - Retina","Oft. - Glaucoma","Oft. - Córnea","Oft. - General","Dir. Médica","Ger. Clínica"];
+const cargos=["Médico Especialista","Jefe Oftalmología","Director Médico","Gerente","Administrador","Sub-director"];
+const clinicas=["Clínica Barraquer","Reina Sofía","Del Country","San Ignacio","Fundación Santa Fe","Clínica Shaio","Clínica Marly","Palermo","C.O. Norte","Instituto Barraquer"];
+const ciudades=["Bogotá","Bogotá","Bogotá","Bogotá","Medellín","Medellín","Cali","Barranquilla","Bucaramanga","Pereira"];
+const canales=["Google Ads","Google Ads","Google Ads","Meta Ads","Meta Ads","OOH - QR","Referido"];
+const etapas=["Nuevo Lead","Contactado","MQL","Cita Programada","Demo Realizada","Cotización Enviada","Cerrado Perdido"];
+const nombres=["Carlos G.","María L.","Andrés R.","Juliana M.","Jorge P.","Laura C.","Felipe V.","Ana S.","Mauricio D.","Valentina F.","Ricardo H.","Catalina B.","Diego O.","Sofía T.","Sergio N."];
+
+for(let i=0;i<200;i++){
+  const s=seededRand(i*7,15,98);
+  let etapa, mql, sql, won;
+  if(i===46||i===132){ etapa="Cerrado Ganado"; mql=true; sql=true; won=true; }
+  else if(s>=75){ etapa=etapas[seededRand(i*7+1,2,6)]; mql=true; sql=s>=80; won=false; }
+  else if(s>=45){ etapa=etapas[seededRand(i*7+1,1,3)]; mql=s>=55; sql=false; won=false; }
+  else{ etapa="Nuevo Lead"; mql=false; sql=false; won=false; }
+  leads.push({
+    id:`LK-${String(i+1).padStart(4,'0')}`,
+    nombre:nombres[i%nombres.length],
+    espec:specs[seededRand(i*7+2,0,5)],
+    clinica:clinicas[i%clinicas.length],
+    ciudad:ciudades[seededRand(i*7+3,0,9)],
+    canal:canales[seededRand(i*7+4,0,6)],
+    score:s, etapa, mql, sql, won
+  });
+}
+
+let filtered = [...leads];
+
+function buildTable(data){
+  const tb = document.getElementById('leads-table');
+  const rows = data.slice(0,10);
+  tb.innerHTML = rows.map(l=>{
+    let tagClass='tag-new', tagLabel=l.etapa;
+    if(l.won){tagClass='tag-won';tagLabel='Cerrado Ganado';}
+    else if(l.sql){tagClass='tag-sql';tagLabel='SQL';}
+    else if(l.mql){tagClass='tag-mql';tagLabel='MQL';}
+    else if(l.etapa==='Cita Programada'){tagClass='tag-cita';}
+    const scoreColor=l.score>=75?'#4ade80':l.score>=50?'#fbbf24':'#f87171';
+    return `<tr>
+      <td style="font-family:'DM Mono',monospace;color:var(--mg)">${l.id}</td>
+      <td style="font-weight:500;color:#fff">${l.nombre}</td>
+      <td>${l.espec}</td>
+      <td>${l.clinica}</td>
+      <td>${l.ciudad}</td>
+      <td style="color:var(--mg)">${l.canal}</td>
+      <td><span style="font-family:'DM Mono',monospace;color:${scoreColor};font-weight:600">${l.score}</span></td>
+      <td><span class="tag ${tagClass}">${tagLabel}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateKPIs(data){
+  const mqls=data.filter(l=>l.mql).length;
+  const wons=data.filter(l=>l.won).length;
+  const inv=15000000;
+  const cpl=data.length>0?Math.round(inv/data.length):0;
+  document.getElementById('k-leads').textContent=data.length;
+  document.getElementById('k-mql').textContent=mqls;
+  document.getElementById('k-cpl').textContent='$'+Math.round(cpl/1000)+'K';
+  document.getElementById('k-won').textContent=wons;
+}
+
+function applyFilters(){
+  const canal=document.getElementById('f-canal').value;
+  const etapa=document.getElementById('f-etapa').value;
+  const ciudad=document.getElementById('f-ciudad').value;
+  const semana=document.getElementById('f-semana').value;
+  filtered=leads.filter(l=>{
+    if(canal!=='all'){
+      if(canal==='google'&&!l.canal.includes('Google'))return false;
+      if(canal==='meta'&&!l.canal.includes('Meta'))return false;
+      if(canal==='ooh'&&!l.canal.includes('OOH'))return false;
+    }
+    if(etapa!=='all'){
+      if(etapa==='mql'&&!l.mql)return false;
+      if(etapa==='sql'&&!l.sql)return false;
+      if(etapa==='demo'&&l.etapa!=='Demo Realizada')return false;
+      if(etapa==='cierre'&&!l.won)return false;
+    }
+    if(ciudad!=='all'){
+      if(ciudad==='bogota'&&l.ciudad!=='Bogotá')return false;
+      if(ciudad==='medellin'&&l.ciudad!=='Medellín')return false;
+      if(ciudad==='cali'&&l.ciudad!=='Cali')return false;
+    }
+    return true;
+  });
+  buildTable(filtered);
+  updateKPIs(filtered);
+  updateFunnel(filtered);
+}
+
+function resetFilters(el){
+  document.getElementById('f-canal').value='all';
+  document.getElementById('f-etapa').value='all';
+  document.getElementById('f-ciudad').value='all';
+  document.getElementById('f-semana').value='all';
+  applyFilters();
+}
+
+function updateFunnel(data){
+  const total=leads.length;
+  const funnelData=[
+    {label:'Leads totales',    n:data.length,        color:'#1E56C8'},
+    {label:'Contactados',      n:data.filter(l=>l.etapa!=='Nuevo Lead').length, color:'#1A6CB5'},
+    {label:'MQL calificados',  n:data.filter(l=>l.mql).length,  color:'#0E7C5A'},
+    {label:'SQL (ventas ready)',n:data.filter(l=>l.sql).length,  color:'#0A5C42'},
+    {label:'Demo realizada',   n:data.filter(l=>l.etapa==='Demo Realizada'||l.etapa==='Cotización Enviada'||l.won).length, color:'#F5A623'},
+    {label:'Cierre ganado',    n:data.filter(l=>l.won).length,   color:'#E8182A'},
+  ];
+  const max=funnelData[0].n||1;
+  const fc=document.getElementById('funnel-container');
+  fc.innerHTML=funnelData.map(f=>`
+    <div class="funnel-row">
+      <div class="funnel-label">${f.label}</div>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${Math.max(6,Math.round(f.n/max*100))}%;background:${f.color}">
+          ${f.n>0?Math.round(f.n/funnelData[0].n*100)+'%':''}
+        </div>
+      </div>
+      <div class="funnel-num">${f.n}</div>
+    </div>
+  `).join('');
+}
+
+Chart.defaults.color='#8A99B5';
+Chart.defaults.borderColor='rgba(255,255,255,0.06)';
+Chart.defaults.font.family="'DM Sans',sans-serif";
+
+new Chart(document.getElementById('chart-daily'),{
+  type:'bar',
+  data:{
+    labels:days,
+    datasets:[
+      {label:'Google Ads',data:googleLeads,backgroundColor:'#378ADD',stack:'s'},
+      {label:'Meta Ads',  data:metaLeads,  backgroundColor:'#E8182A',stack:'s'},
+      {label:'OOH / QR',  data:oohLeads,   backgroundColor:'#0E7C5A',stack:'s'},
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y} leads`}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{maxTicksLimit:10,color:'#8A99B5',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#8A99B5',font:{size:10},stepSize:2}}
+    }
+  }
+});
+
+new Chart(document.getElementById('chart-donut'),{
+  type:'doughnut',
+  data:{
+    labels:['Google Ads','Meta Ads','OOH','Tech Stack'],
+    datasets:[{data:[7000000,3000000,3500000,1500000],
+      backgroundColor:['#1E56C8','#E8182A','#0E7C5A','#F5A623'],
+      borderColor:'#0D1B3E',borderWidth:3,hoverOffset:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,cutout:'68%',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${(c.parsed/1000000).toFixed(1)}M COP (${Math.round(c.parsed/15000000*100)}%)`}}}
+  }
+});
+
+new Chart(document.getElementById('chart-cpl'),{
+  type:'bar',
+  data:{
+    labels:['Google Ads','Meta Ads','OOH','Referidos'],
+    datasets:[{
+      data:[87000,62000,145000,0],
+      backgroundColor:['#1E56C8','#E8182A','#0E7C5A','#8A99B5'],
+      borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${(c.parsed.y/1000).toFixed(0)}K COP`}}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8A99B5',font:{size:11}}},
+      y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#8A99B5',font:{size:10},callback:v=>'$'+Math.round(v/1000)+'K'}}
+    }
+  }
+});
+
+new Chart(document.getElementById('chart-ctr'),{
+  type:'line',
+  data:{
+    labels:['Semana 1','Semana 2','Semana 3','Semana 4'],
+    datasets:[
+      {label:'Google Ads',data:[3.2,3.8,4.1,3.9],borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,.1)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:'#378ADD'},
+      {label:'Meta Ads', data:[1.8,2.3,2.1,2.6],borderColor:'#E8182A',backgroundColor:'rgba(232,24,42,.1)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:'#E8182A',borderDash:[5,5]},
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}%`}}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8A99B5',font:{size:11}}},
+      y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#8A99B5',font:{size:10},callback:v=>v+'%'},min:0,max:6}
+    }
+  }
+});
+
+new Chart(document.getElementById('chart-city'),{
+  type:'bar',
+  data:{
+    labels:['Bogotá','Medellín','Cali','B/quilla','Bucaramanga'],
+    datasets:[{
+      data:[76,44,32,20,14],
+      backgroundColor:['#1E56C8','#0E7C5A','#F5A623','#E8182A','#8A99B5'],
+      borderRadius:6
+    }]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#8A99B5',font:{size:10}}},
+      y:{grid:{display:false},ticks:{color:'#c8d4e8',font:{size:11}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('chart-espec'),{
+  type:'polarArea',
+  data:{
+    labels:['Retina','Glaucoma','Córnea','Gral.','Dir. Médica'],
+    datasets:[{
+      data:[52,45,32,38,33],
+      backgroundColor:['rgba(55,138,221,.75)','rgba(14,124,90,.75)','rgba(245,166,35,.75)','rgba(232,24,42,.75)','rgba(138,153,181,.75)'],
+      borderColor:['#378ADD','#0E7C5A','#F5A623','#E8182A','#8A99B5'],
+      borderWidth:2
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{r:{grid:{color:'rgba(255,255,255,.06)'},ticks:{display:false}}}
+  }
+});
+
+new Chart(document.getElementById('chart-score'),{
+  type:'bar',
+  data:{
+    labels:['0–20','21–40','41–60','61–80','81–100'],
+    datasets:[{
+      label:'Leads',
+      data:[18,42,68,52,20],
+      backgroundColor:['rgba(232,24,42,.7)','rgba(245,166,35,.6)','rgba(30,86,200,.6)','rgba(14,124,90,.7)','rgba(14,124,90,.95)'],
+      borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y} leads`}}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8A99B5',font:{size:11}}},
+      y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#8A99B5',font:{size:10}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('chart-conv'),{
+  type:'radar',
+  data:{
+    labels:['Google Ads','Meta Ads','OOH','Referidos','LinkedIn'],
+    datasets:[{
+      label:'Conv. a MQL (%)',
+      data:[31,28,18,45,22],
+      backgroundColor:'rgba(30,86,200,.15)',
+      borderColor:'#1E56C8',
+      pointBackgroundColor:'#1E56C8',
+      pointRadius:5,
+      fill:true
+    },{
+      label:'Conv. a SQL (%)',
+      data:[18,14,8,32,10],
+      backgroundColor:'rgba(14,124,90,.1)',
+      borderColor:'#0E7C5A',
+      pointBackgroundColor:'#0E7C5A',
+      pointRadius:5,
+      borderDash:[4,4],
+      fill:true
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{r:{
+      grid:{color:'rgba(255,255,255,.08)'},
+      angleLines:{color:'rgba(255,255,255,.06)'},
+      ticks:{color:'#8A99B5',font:{size:9},backdropColor:'transparent',callback:v=>v+'%'},
+      pointLabels:{color:'#c8d4e8',font:{size:11}}
+    }}
+  }
+});
+
+buildTable(leads);
+updateFunnel(leads);
+</script>
